@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="/css/bootstrap.css" rel="stylesheet"></link>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">
+            <img src="/img/header.png"/>
+          </a>
+        </div>
+        <% if session[:username] %>
+          <div class="navbar-right">
+            <a class="navbar-brand" href="/logout">Logout</a>
+          </div>
+        <% end %>
+      </div>
+    </nav>
+    <div class='container'>
+      <% unless session[:subscribed_subreddits] %>
+        <center>
+          <h1>Reddit Chat</h1>
+          <p>Chat with other Reddit Users</p>
+          <p>
+            <a class="btn btn-primary btn-lg" href="/login" role="button">Log In</a>
+            <a class="btn btn-primary btn-lg" href="/reddit_login" role="button">Log In With Reddit</a>
+            <a class="btn btn-primary btn-lg" href="/signup" role="button">Sign Up</a>
+          </p>
+        </center>
+      <% else %>
+        <h4>Welcome <%= session[:username] %>!</h4>
+        <p>Which one of your subreddits would you like to chat with?</p>
+        <% session[:subscribed_subreddits].each do |s, url| %>
+          <a href="<%= url %>"><%= s %></a>
+          <br/>
+        <% end %>
+        <p>Or manually enter a subreddit:
+          <form action="/r/">
+            <input type="text" name="sub">
+            <input type="submit" value="Submit">
+          </form>
+      <% end %>
+    </div>
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/app.js"></script>
+  </body>
+</html>

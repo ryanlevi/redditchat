@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <link href='/css/bootstrap.css' rel='stylesheet'>
+  </head>
+  <body>
+    <nav class='navbar navbar-default'>
+      <div class='container-fluid'>
+        <div class='navbar-header'>
+          <a class='navbar-brand' href='/'>
+            <img src='/img/header.png'>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class='container'>
+      <% if session[:error] %>
+        <font size=4, color=red><%= session[:error] %></font>
+      <% end %>
+      <form action='/signup' method='POST'>
+        Email
+        <br>
+        <input name='email' type='text'>
+        <br>
+        Password:
+        <br>
+        <input name='password' type='password'>
+        <br>
+        Repeat Password:
+        <br>
+        <input name='password_kampf' type='password'>
+        <br>
+        <br>
+        <input class="btn btn-primary" type='submit' value='Submit'>
+      </form>
+    </div>
+    <script src='http://code.jquery.com/jquery-1.7.2.min.js'></script>
+    <script src='/js/bootstrap.js'></script>
+    <script src='/js/app.js'></script>
+  </body>
+</html>
