@@ -50,4 +50,7 @@ class HomeController < ApplicationController
   def signup
     session[:error] = ""
   end
+  def chat
+    session[:subreddit] = params[:id]
+  end
 end

@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Redditchat</title>
+  <title>RedditChat</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <script data-turbolinks-track="true">var sub = '<%=session[:subreddit].capitalize %>';</script>
   <%= csrf_meta_tags %>
 </head>
-<body>
-
-<%= yield %>
-
-</body>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">
+            <img src="/assets/header.png"/>
+          </a>
+        </div>
+        <% if session[:username] %>
+          <div class="navbar-right">
+            <a class="navbar-brand" href="/logout">Logout</a>
+          </div>
+        <% end %>
+      </div>
+      <%= yield %>
+  </body>
 </html>
