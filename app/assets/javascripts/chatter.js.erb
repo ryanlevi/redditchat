@@ -9,6 +9,9 @@ $(document).ready(function() {
 
   dispatcher.on_open = function(data) {
     console.log('Websocket Open');
+    for(i = 0; i < subs.length; i++) { 
+      create_channel(subs[i]);
+    }
     create_channel(sub);
     // create_channel('Websockets');
     // create_channel('Ruby');
@@ -203,7 +206,7 @@ $(document).ready(function() {
     for (var room in rooms) {
       channelsHtml = channelsHtml +
       ("<li class=\"room-text\"><i class=\"fa fa-comments\"></i>&nbsp;<label>" +
-      "<a href=\"#" + room + "\" role=\"tab\" data-toggle=\"tab\">" +
+      "<a href=\"/r/" + room + "\" role=\"tab\" data-toggle=\"tab\">" +
       room + "</a></label>" + indicator + "</li>");
       i++;
     }
@@ -215,7 +218,7 @@ $(document).ready(function() {
         $("li:contains("+room+") span").html(messages[room]);
       }
     }
-    $('#room-heading').html('Rooms (' + i + ')');
+    $('#room-heading').html('Subreddits (' + i + ')');
   };
 
   $('#room-list').on('click', '.room-text', function (e) {

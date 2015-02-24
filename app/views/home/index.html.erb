@@ -14,7 +14,7 @@
     <p>Which one of your subreddits would you like to chat with?</p>
     <% session[:subscribed_subreddits].each do |s, url| %>
       <a href="<%= url %>"><%= s %></a>
-      <br/>
+      <br>
     <% end %>
     <p>Or manually enter a subreddit:
       <form action="/r/">

@@ -5,6 +5,16 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <script data-turbolinks-track="true">var sub = '<%=session[:subreddit].capitalize %>';</script>
+  <script data-turbolinks-track="true">
+    var subs = [];
+    i = 0;
+    <% session[:subscribed_subreddits].each do |sub| %>
+      <% if sub[0].capitalize != session[:subreddit].capitalize %>
+        subs[i] = '<%=sub[0]%>';
+        i++;
+      <% end %>
+    <% end %>
+  </script>
   <%= csrf_meta_tags %>
 </head>
   <body>
