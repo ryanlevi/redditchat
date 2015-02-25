@@ -16,13 +16,20 @@
       <a href="<%= url %>"><%= s %></a>
       <br>
     <% end %>
-    <p>Or manually enter a subreddit:
-      <form action="/r/">
-        <input type="text" name="sub">
-        <input type="submit" value="Submit">
-      </form>
+      <div class="form-inline">
+        <div class="form-group">
+          <label>Or manually enter a subreddit:</label>
+          <input type="text" class="form-control" id="subreddit" onkeydown="if (event.keyCode == 13) document.getElementById('submit_button').click()">
+        <button id="submit_button" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
   <% end %>
 </div>
 <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 <script src="/js/bootstrap.js"></script>
 <script src="/js/app.js"></script>
+<script>
+$('#submit_button').click(function() {
+  window.location="/r/"+document.getElementById("subreddit").value;
+});
+</script>

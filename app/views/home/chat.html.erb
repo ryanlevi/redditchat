@@ -35,7 +35,7 @@
         <div class="panel-body room-panel">
           <ul id="room-list" class="nav nav-pills nav-stacked" role="tablist">
           <% session[:subscribed_subreddits].each do |sub| %>
-            <li><label><a href="<%=sub[1]%>" role="tab" data-toggle="tab"><%=sub[0]%></a></label></li>
+            <li><label><a href="<%=sub[1]%>"><%=sub[0]%></a></label></li>
           <% end %>
           </ul>
         </div>
