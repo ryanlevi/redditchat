@@ -52,11 +52,13 @@ $(document).ready(function() {
   };
 
   function user_list_content(data) {
+    console.log(data);
     if ($('#chatbox-header').text() == data.channel_name) {
       users[data.channel_name] = data.users;
       admins[data.channel_name] = data.admins;
       var userHtml, icon;
       userHtml = "";
+      console.log(data);
       for (i = 0; i < data.users.length; i++) {
         icon = 'user';
         if (data.admins.indexOf(data.users[i]) > -1) {
@@ -77,6 +79,7 @@ $(document).ready(function() {
   $('#input-message').on('submit', function(e) {
     e.preventDefault();
     var message = $('#message').val();
+
     var currentRoom = $('#room-list .room-text.custom-active a').text();
     tokens = message.split(" ");
     if (tokens[0] == "/join") {
@@ -98,6 +101,8 @@ $(document).ready(function() {
       });
       chatter_image();
     }
+            console.log(currentRoom);
+
     $('#message').val('');
   });
 

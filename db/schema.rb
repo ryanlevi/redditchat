@@ -11,11 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150221221959) do
+ActiveRecord::Schema.define(version: 20150226041157) do
 
   create_table "users", force: true do |t|
     t.string   "name"
-    t.boolean  "reddit"
+    t.boolean  "reddit",     default: false
     t.string   "password"
     t.datetime "created_at"
     t.datetime "updated_at"

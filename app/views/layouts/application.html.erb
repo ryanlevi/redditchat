@@ -4,14 +4,18 @@
   <title>RedditChat</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <script data-turbolinks-track="true">var sub = '<%=session[:subreddit].capitalize %>';</script>
+  <% if session[:subreddit] %>
+    <script data-turbolinks-track="true">var sub = '<%=session[:subreddit].capitalize %>';</script>
+  <% end %>
   <script data-turbolinks-track="true">
     var subs = [];
     i = 0;
-    <% session[:subscribed_subreddits].each do |sub| %>
-      <% if sub[0].capitalize != session[:subreddit].capitalize %>
-        subs[i] = '<%=sub[0]%>';
-        i++;
+    <% if session[:subscribed_subreddits] and session[:subreddit] %>
+      <% session[:subscribed_subreddits].each do |sub| %>
+        <% if sub[0].capitalize != session[:subreddit].capitalize %>
+          subs[i] = '<%=sub[0]%>';
+          i++;
+        <% end %>
       <% end %>
     <% end %>
   </script>

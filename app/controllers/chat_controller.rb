@@ -70,7 +70,8 @@ class ChatController < WebsocketRails::BaseController
   end
 
   def client_connected
-    connection_store[:user] = { handle: current_user.handle }
+    binding.pry
+    connection_store[:user] = { handle: session[:username] }
     connection_store[:channels] = []
   end
 
@@ -106,7 +107,7 @@ class ChatController < WebsocketRails::BaseController
     end
     connection_store[:user] = nil
     user_channels.each do |channel|
-      broadcast_user_list(channel)
+    broadcast_user_list(channel)
     end
   end
 end
