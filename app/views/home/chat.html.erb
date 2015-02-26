@@ -3,7 +3,9 @@
     <div class="col-md-9">
       <div class="panel panel-primary">
         <div class="panel-heading">
+          <% if session[:subreddit] %>
           <h3 class="panel-title" id="chatbox-header"><%= session[:subreddit].capitalize %></h3>
+          <% end %>
         </div>
         <div class="panel-body chat-panel">
           <div id="chat" class="tab-content" data-uri="<%= request.host %>:<%= request.port %>/websocket">
@@ -12,7 +14,7 @@
       </div>
       <form id="input-message">
         <div class="input-group">
-          <input type="text" id="message" class="form-control" placeholder="Message..." autofocus>
+          <input type="text" id="message" class="form-control" placeholder="Message..." autofocus autocomplete="off">
           <span class="input-group-btn">
             <button id="send" class="btn btn-primary">Send!</button>
           </span>
@@ -34,8 +36,10 @@
         </div>
         <div class="panel-body room-panel">
           <ul id="room-list" class="nav nav-pills nav-stacked" role="tablist">
-          <% session[:subscribed_subreddits].each do |sub| %>
-            <li><label><a href="<%=sub[1]%>"><%=sub[0]%></a></label></li>
+          <% if session[:subscribed_subreddits] %>
+            <% session[:subscribed_subreddits].each do |sub| %>
+              <li><label><a href="<%=sub[1]%>"><%=sub[0]%></a></label></li>
+            <% end %>
           <% end %>
           </ul>
         </div>

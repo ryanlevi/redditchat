@@ -70,12 +70,12 @@ class ChatController < WebsocketRails::BaseController
   end
 
   def client_connected
-    binding.pry
     connection_store[:user] = { handle: session[:username] }
     connection_store[:channels] = []
   end
 
   def new_message
+    User.create
     response_body = controller_store[:markdown].render(message[:message_body])
     response_body = emojify(response_body)
     if response_body.start_with?('<p>') && response_body.chomp.end_with?('</p>')

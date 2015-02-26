@@ -33,6 +33,8 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   config.middleware.delete Rack::Lock
+  config.use_ssl = true
+  config.ssl_port = 3000
 
 
   # Raises error for missing translations
