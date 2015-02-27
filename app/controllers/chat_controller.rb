@@ -4,21 +4,9 @@ class ChatController < WebsocketRails::BaseController
     controller_store[:markdown] ||= Redcarpet::Markdown.new(renderer)
   end
 
-  def system_wide_message(event, message)
-    channels = WebsocketRails.channel_tokens.keys
-    channels.each do |channel|
-      WebsocketRails[channel].trigger(event, {
-        user_name: 'Admin',
-        received: Time.now.to_s(:short),
-        message_body: message,
-        channel_name: channel
-      })
-    end
-  end
-
   def user_message(event, message, channel)
     WebsocketRails[channel].trigger(event, {
-      user_name: current_user.handle,
+      user_name: session[:username],
       received: Time.now.to_s(:short),
       message_body: message,
       channel_name: channel
@@ -31,31 +19,6 @@ class ChatController < WebsocketRails::BaseController
         received: Time.now.to_s(:short),
         message_body: "#{connection_store[:user][:handle]} #{action} the channel.",
         channel_name: channel
-      })
-  end
-
-  def action_message(event, channel, message)
-    WebsocketRails[channel].trigger(event, {
-        user_name: 'HAL9000',
-        received: Time.now.to_s(:short),
-        message_body: message,
-        channel_name: channel
-      })
-  end
-
-  def broadcast_user_list(channel)
-    users = []
-    admins = []
-    WebsocketRails[channel].subscribers.each do |conn|
-      users << conn.user.handle
-      if conn.user.admin
-        admins << conn.user.handle
-      end
-    end
-    WebsocketRails[channel].trigger(:user_list, {
-      users: users,
-      channel_name: channel,
-      admins: admins
       })
   end
 
@@ -75,21 +38,12 @@ class ChatController < WebsocketRails::BaseController
   end
 
   def new_message
-    User.create
     response_body = controller_store[:markdown].render(message[:message_body])
     response_body = emojify(response_body)
     if response_body.start_with?('<p>') && response_body.chomp.end_with?('</p>')
       response_body = format_message(response_body.chomp[3..-5])
     end
-    if current_user.admin && response_body.start_with?('/admin')
-      system_wide_message(:new_message, response_body[7..-1])
-    elsif response_body.start_with?('/roll')
-      roll = user_roll(response_body)
-      action_message(:new_message, message[:channel_name],
-                    "#{connection_store[:user][:handle]} rolled a #{roll[0]} (1-#{roll[1]})!")
-    else
-      user_message(:new_message, response_body, message[:channel_name])
-    end
+    user_message(:new_message, response_body, message[:channel_name])
   end
 
   def new_channel_message

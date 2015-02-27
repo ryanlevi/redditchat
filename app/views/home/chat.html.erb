@@ -1,3 +1,4 @@
+<%= javascript_include_tag 'chat_app', 'data-turbolinks-track' => true %>
 <div class="container">
   <div class="row">
     <div class="col-md-9">
@@ -35,7 +36,7 @@
           <h3 id="room-heading" class="panel-title">Subreddits</h3>
         </div>
         <div class="panel-body room-panel">
-          <ul id="room-list" class="nav nav-pills nav-stacked" role="tablist">
+          <ul id="room-list" class="nav nav-pills nav-stacked">
           <% if session[:subscribed_subreddits] %>
             <% session[:subscribed_subreddits].each do |sub| %>
               <li><label><a href="<%=sub[1]%>"><%=sub[0]%></a></label></li>

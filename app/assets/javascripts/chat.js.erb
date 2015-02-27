@@ -1,75 +1,30 @@
 $(document).ready(function() {
   var dispatcher = new WebSocketRails($('#chat').data('uri'));
-  console.log(dispatcher);
+
   var rooms = {};
-  var users = {};
-  var admins = {};
   var messages = {};
-  var public_channels = [];
 
   dispatcher.on_open = function(data) {
-    console.log('Websocket Open');
     for(i = 0; i < subs.length; i++) { 
       create_channel(subs[i]);
     }
     create_channel(sub);
   };
 
-  dispatcher.bind('public_channels', public_channels_store);
-
-  function public_channels_store(data) {
-    public_channels = data.channels;
-  };
-
   function message_content(data) {
-    var html, label;
-    if (data.user_name == "Server") {
-      label = "info";
-    } else if (data.user_name == "Admin") {
-      label = "danger";
-    } else if (data.user_name == "HAL9000") {
-      label = "warning";
-    } else {
-      label = "success";
-    }
+    var html;
     html = "<div class=\"message-block\"><div class=\"message-text\">" +
-            "<h4><span class=\"label label-" +
-           label + "\">" + "[" + data.received + "] " + data.user_name +
+            "<h4><span class=\"label label-success\">" + "[" + data.received + "] " + data.user_name +
            ":</label>" + "</span></h4>&nbsp;</div><div class=\"message-body\">" +
            data.message_body + "</div></div>";
-    $('#' + data.channel_name).append(html);
-    $('#' + data.channel_name + ' .message-text span:last')[0].scrollIntoView(true);
+    $('/r/' + data.channel_name).append(html);
+    $('/r/' + data.channel_name + ' .message-text span:last')[0].scrollIntoView(true);
     if (data.channel_name == $('#chatbox-header').text()) {
       messages[data.channel_name] = 0;
       $("li:contains("+data.channel_name+") span").html("");
     } else {
       messages[data.channel_name]++;
       $("li:contains("+data.channel_name+") span").html(messages[data.channel_name]);
-    }
-  };
-
-  function user_list_content(data) {
-    console.log(data);
-    if ($('#chatbox-header').text() == data.channel_name) {
-      users[data.channel_name] = data.users;
-      admins[data.channel_name] = data.admins;
-      var userHtml, icon;
-      userHtml = "";
-      console.log(data);
-      for (i = 0; i < data.users.length; i++) {
-        icon = 'user';
-        if (data.admins.indexOf(data.users[i]) > -1) {
-          icon = 'gavel';
-        }
-        userHtml = userHtml +
-        ("<div class=\"user-text\"><i class=\"fa fa-" + icon + "\"></i>&nbsp;<label>" +
-        data.users[i] + "</label></div>");
-      }
-      $('#user-list').html(userHtml);
-      $('#user-heading').html('Users (' + data.users.length + ')');
-    } else {
-      users[data.channel_name] = data.users;
-      admins[data.channel_name] = data.admins;
     }
   };
 
@@ -80,49 +35,19 @@ $(document).ready(function() {
     var currentRoom = $('#room-list .room-text.custom-active a').text();
     tokens = message.split(" ");
     if (message != "") {
-      console.log("sent");
-      dispatcher.trigger('new_message', {
+      var x = dispatcher.trigger('new_message', {
         channel_name: currentRoom,
         message_body: message
       });
+            console.log(x);
+
     }
     $('#message').val('');
   });
 
-  function get_time() {
-    var message_time = new Date().toString().split(" ");
-    message_time = message_time[2] +
-                   " " + message_time[1] +
-                   " " + message_time[4].slice(0, -3);
-    return message_time;
-  };
-
-  function leave_channel(channelName) {
-    if (rooms[channelName]) {
-      dispatcher.unsubscribe(channelName);
-      dispatcher.trigger('new_channel_message', {
-        channel_name: channelName,
-        user_action: "has left"
-      });
-
-      delete rooms[channelName];
-
-      $('#' + channelName).remove();
-      update_channels_list();
-      $('#room-list li:last a').click();
-
-      if ($('#room-list li').length == 0) {
-        $('#chatbox-header').html("Channel Name");
-        $('#user-list .user-text').remove();
-        $('#user-heading').html("Users (0)");
-      }
-    }
-  };
-
   function create_channel(channelName) {
     rooms[channelName] = dispatcher.subscribe(channelName);
     rooms[channelName].bind('new_message', message_content);
-    rooms[channelName].bind('user_list', user_list_content);
     dispatcher.trigger('new_channel_message', {
       channel_name: channelName,
       user_action: "joined"
@@ -134,7 +59,7 @@ $(document).ready(function() {
 
     html = "<div id=\"" + channelName + "\" class=\"tab-pane\"></div>";
     $('#chat').append(html);
-    $('#room-list .room-text label a[href="#' + channelName + '"]').tab('show');
+    $('#room-list .room-text label a[href="/r/' + channelName + '"]');
     $('#chatbox-header').html(channelName);
 
     $('#room-list .room-text.custom-active').removeClass('custom-active');
@@ -170,23 +95,4 @@ $(document).ready(function() {
     $('#room-heading').html('Subreddits (' + i + ')');
   };
 
-  $('#room-list').on('click', '.room-text', function (e) {
-    e.preventDefault();
-    $('#room-list .room-text.custom-active').removeClass('custom-active');
-    $(this).addClass('custom-active');
-    var tabLink = $(this).find('a')[0];
-    var channelName = tabLink.innerHTML;
-    tabLink.click();
-    $('#chatbox-header').html(channelName);
-    user_list_content({
-      users: users[channelName],
-      channel_name: channelName,
-      admins: admins[channelName]
-    });
-    $("li:contains("+channelName+") span").html("");
-    $(this).tab('show').on('shown.bs.tab', function() {
-      $('#' + channelName + ' .message-text h4:last')[0].scrollIntoView(true);
-    });
-    $('#message').focus();
-  });
 });
