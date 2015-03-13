@@ -25,10 +25,13 @@ class HomeController < ApplicationController
 
   def login_post
     @user = User.find_by_name(params[:email])
+    crypt = ActiveSupport::MessageEncryptor.new(Rails.application.secrets.secret_key_base)
     if(@user)
-      session[:username] = @user.name
-      session[:subscribed_subreddits] = []
-      redirect_to :root
+      if(crypt.decrypt_and_verify(@user.password) == params[:password])
+        session[:username] = @user.name
+        session[:subscribed_subreddits] = []
+        redirect_to :root
+      end
     end
   end
 
