@@ -7,7 +7,8 @@ class ChatController < WebsocketRails::BaseController
 
   def system_message(event, message)
     broadcast_message event, {
-      user_name: 'Server',
+      user_name: 'RedditChat Server',
+      subreddit: session[:subreddit].downcase,
       received: Time.now.to_s(:short),
       message_body: message
     }
@@ -25,8 +26,8 @@ class ChatController < WebsocketRails::BaseController
   end
 
   def client_connected
-    puts "#{session[:username]} connected!"
-    session[:connect] = true
+    puts "#{session[:username]} joined #{session[:subreddit]}"
+    system_message :new_message, "#{session[:username]} joined #{session[:subreddit]}"
   end
 
   def new_message
@@ -40,10 +41,9 @@ class ChatController < WebsocketRails::BaseController
   end
 
   def delete_user
-    system_msg "#{connection_store[:user][:user_name]} disconnected"
-    connection_store[:user] = nil
-    broadcast_user_list
-    session[:connect] = false
+    system_message :new_message, "#{session[:username]} left #{session[:subreddit]}"
+    # connection_store[:user] = nil
+    # broadcast_user_list
   end
 
   def broadcast_user_list

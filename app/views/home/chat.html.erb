@@ -16,7 +16,7 @@
       <form id="input-message">
         <div class="input-group">
           <input type="text" id="message" class="form-control" placeholder="Message..." autofocus autocomplete="off">
-          <input hidden value=<%=session[:subreddit]%> id="sub">
+          <input hidden value=<%=session[:subreddit].downcase%> id="sub">
           <span class="input-group-btn">
             <button id="send" class="btn btn-primary">Send!</button>
           </span>
@@ -43,6 +43,9 @@
               <li><label><a href="<%=sub[1]%>" target="_self"><%=sub[0]%></a></label></li>
             <% end %>
           <% end %>
+          <label>Or manually enter a subreddit:</label>
+          <input type="text" class="form-control" id="subreddit" onkeydown="if (event.keyCode == 13) document.getElementById('submit_button').click()">
+          <button id="submit_button" class="btn btn-primary">Submit</button>
           </ul>
         </div>
       </div>

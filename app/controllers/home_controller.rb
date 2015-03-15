@@ -54,6 +54,15 @@ class HomeController < ApplicationController
     session[:error] = ""
   end
   def chat
-    session[:subreddit] = params[:id]
+    @r = RedditKit::Client.new
+    begin
+      if @r.subreddit params[:id]
+        session[:subreddit] = params[:id]
+      else
+        redirect_to :root
+      end
+    rescue
+      redirect_to :root
+    end
   end
 end
