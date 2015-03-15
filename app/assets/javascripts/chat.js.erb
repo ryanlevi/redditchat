@@ -9,8 +9,9 @@ $(document).ready(function() {
     console.log(data);
     if(data.message_body != ''){
       var user = data.user_name;
-      if(user == 'RedditChat Server')
+      if(user == 'RedditChat Server'){
         user = "<span class='label label-danger'>RedditChat Server</span> ";
+      }
       else if(user.indexOf("@") <= -1){
         user = "<span class='label label-primary'><a style='color:#FFFFFF' href='http://www.reddit.com/user/" + data.user_name + "' target='_blank'>" + data.user_name + "</a></span> ";
       }
@@ -23,6 +24,7 @@ $(document).ready(function() {
       else if($('#post_url').val() == data.subreddit){
         $('#chat').append(user + data.message_body+"<br>");
       }
+      console.log($('#post_url').val());
     }
   });
 
@@ -46,5 +48,8 @@ $(document).ready(function() {
 
   $('#submit_button').click(function() {
     window.location="/r/"+document.getElementById("subreddit").value;
+  });
+  $('#submit_button2').click(function() {
+    window.location="home/posts?id="+document.getElementById("post_url").value;
   });
 });
