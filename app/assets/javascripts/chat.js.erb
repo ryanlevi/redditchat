@@ -20,16 +20,26 @@ $(document).ready(function() {
       if($('#sub').val() == data.subreddit){
         $('#chat').append(user + data.message_body+"<br>");
       }
+      else if($('#post_url').val() == data.subreddit){
+        $('#chat').append(user + data.message_body+"<br>");
+      }
     }
   });
 
   $('#input-message').on('submit', function(event) {
     event.preventDefault();
     var message = $('#message').val();
+    var sub;
+    if($('#sub').val()){
+      sub = $('#sub').val();
+    }
+    else if($('#post_url').val()){
+      sub = $('#post_url').val();
+    }
 
     dispatcher.trigger('new_message', {
       message_body: message,
-      subreddit: $('#sub').val()
+      subreddit: sub
     });
     $('#message').val('');
   });

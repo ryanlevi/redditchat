@@ -50,9 +50,11 @@ class HomeController < ApplicationController
       redirect_to :root
     end
   end
+
   def signup
     session[:error] = ""
   end
+
   def chat
     @r = RedditKit::Client.new
     begin
@@ -65,4 +67,27 @@ class HomeController < ApplicationController
       redirect_to :root
     end
   end
+
+  def posts
+    @r = RedditKit::Client.new
+    begin
+      if(params[:id].starts_with? "http")
+        @link_id = params[:id].match(/(\w|\W)comments.(.*)(\W.)/)[2]
+      else
+        @link_id = params[:id]
+      end
+      @post = @r.link "t3_#{@link_id}"
+      if @post
+        session[:post_title] = @post.title
+        session[:post_url] = @post.url
+        session[:post_sub] = @post.subreddit
+        session[:post_author] = @post.author
+      else
+        redirect_to :root
+      end
+    rescue
+      redirect_to :root
+    end
+  end
+
 end

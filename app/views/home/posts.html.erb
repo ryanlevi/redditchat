@@ -4,8 +4,8 @@
     <div class="col-md-9">
       <div class="panel panel-primary">
         <div class="panel-heading">
-          <% if session[:subreddit] %>
-          <h3 class="panel-title" id="chatbox-header"><%= session[:subreddit].capitalize %></h3>
+          <% if session[:post_title] %>
+            <h3 class="panel-title" id="chatbox-header"><a href="<%= session[:post_url] %>" target="_blank"><%= session[:post_title].capitalize %></a></h3>
           <% end %>
         </div>
         <div class="panel-body chat-panel">
@@ -16,7 +16,7 @@
       <form id="input-message">
         <div class="input-group">
           <input type="text" id="message" class="form-control" placeholder="Message..." autofocus autocomplete="off">
-          <input hidden value=<%=session[:subreddit].downcase%> id="sub">
+          <input hidden value=<%=session[:post_url].downcase%> id="post_url">
           <span class="input-group-btn">
             <button id="send" class="btn btn-primary">Send!</button>
           </span>
@@ -26,19 +26,12 @@
     <div class="col-md-3">
       <div class="panel panel-primary">
         <div class="panel-heading">
-          <h3 id="room-heading" class="panel-title">Subreddits</h3>
+          <h3 id="room-heading" class="panel-title">About This Post</h3>
         </div>
         <div class="panel-body room-panel">
-          <ul id="room-list" class="nav nav-pills nav-stacked">
-          <% if session[:subscribed_subreddits] %>
-            <% session[:subscribed_subreddits].each do |sub| %>
-              <li><label><a href="<%=sub[1]%>" target="_self"><%=sub[0]%></a></label></li>
-            <% end %>
-          <% end %>
-          <label>Or manually enter a subreddit:</label>
-          <input type="text" class="form-control" id="subreddit" onkeydown="if (event.keyCode == 13) document.getElementById('submit_button').click()">
-          <button id="submit_button" class="btn btn-primary">Submit</button>
-          </ul>
+          This <a href="<%= session[:post_url] %>" target="_blank">post</a> was created in the following subreddit:<br>
+          <b><%= session[:post_sub] %></b> (<a href="http://reddit.com/r/<%= session[:post_sub] %>" target='_blank'>Reddit</a>, <a href="/r/<%= session[:post_sub] %>" target='_self'>Chatroom</a>)<br><br>
+          Original post was authored by reddit user: <a href="http://reddit.com/user/<%= session[:post_author] %>" target='_blank'><%= session[:post_author] %></a>.
         </div>
       </div>
     </div>

@@ -9,18 +9,15 @@ class ChatController < WebsocketRails::BaseController
     broadcast_message event, {
       user_name: 'RedditChat Server',
       subreddit: session[:subreddit].downcase,
-      received: Time.now.to_s(:short),
       message_body: message
     }
   end
 
   def user_message(event, message, subreddit)
     puts "received a user message: #{message} on subreddit #{subreddit}"
-    # binding.pry
-    broadcast_message event, {
+    broadcast_message event, { 
       user_name: session[:username],
       subreddit: subreddit,
-      # received: Time.now.to_s(:short),
       message_body: ERB::Util.html_escape(message)
     }
   end
@@ -42,8 +39,7 @@ class ChatController < WebsocketRails::BaseController
 
   def delete_user
     system_message :new_message, "#{session[:username]} left #{session[:subreddit]}"
-    # connection_store[:user] = nil
-    # broadcast_user_list
+    session.clear
   end
 
   def broadcast_user_list
