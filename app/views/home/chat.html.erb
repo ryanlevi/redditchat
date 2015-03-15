@@ -16,6 +16,7 @@
       <form id="input-message">
         <div class="input-group">
           <input type="text" id="message" class="form-control" placeholder="Message..." autofocus autocomplete="off">
+          <input hidden value=<%=session[:subreddit]%> id="sub">
           <span class="input-group-btn">
             <button id="send" class="btn btn-primary">Send!</button>
           </span>

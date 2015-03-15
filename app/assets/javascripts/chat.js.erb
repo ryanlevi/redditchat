@@ -1,98 +1,25 @@
 $(document).ready(function() {
-  var dispatcher = new WebSocketRails($('#chat').data('uri'));
-
-  var rooms = {};
-  var messages = {};
+  var dispatcher = new WebSocketRails('localhost:3000/websocket');
 
   dispatcher.on_open = function(data) {
-    for(i = 0; i < subs.length; i++) { 
-      create_channel(subs[i]);
+    console.log('connected');
+  }
+
+  dispatcher.bind('new_message', function(data) {
+    console.log(data);
+    if($('#sub').val() == data.subreddit){
+      $('#chat').append(data.user_name + ": " + data.message_body+"<br>");
     }
-    create_channel(sub);
-  };
-
-  function message_content(data) {
-    var html;
-    html = "<div class=\"message-block\"><div class=\"message-text\">" +
-            "<h4><span class=\"label label-success\">" + "[" + data.received + "] " + data.user_name +
-           ":</label>" + "</span></h4>&nbsp;</div><div class=\"message-body\">" +
-           data.message_body + "</div></div>";
-    $('/r/' + data.channel_name).append(html);
-    $('/r/' + data.channel_name + ' .message-text span:last')[0].scrollIntoView(true);
-    if (data.channel_name == $('#chatbox-header').text()) {
-      messages[data.channel_name] = 0;
-      $("li:contains("+data.channel_name+") span").html("");
-    } else {
-      messages[data.channel_name]++;
-      $("li:contains("+data.channel_name+") span").html(messages[data.channel_name]);
-    }
-  };
-
-  $('#input-message').on('submit', function(e) {
-    e.preventDefault();
-    var message = $('#message').val();
-
-    var currentRoom = $('#room-list .room-text.custom-active a').text();
-    tokens = message.split(" ");
-    if (message != "") {
-      var x = dispatcher.trigger('new_message', {
-        channel_name: currentRoom,
-        message_body: message
-      });
-            console.log(x);
-
-    }
-    $('#message').val('');
   });
 
-  function create_channel(channelName) {
-    rooms[channelName] = dispatcher.subscribe(channelName);
-    rooms[channelName].bind('new_message', message_content);
-    dispatcher.trigger('new_channel_message', {
-      channel_name: channelName,
-      user_action: "joined"
+  $('#input-message').on('submit', function(event) {
+    event.preventDefault();
+    var message = $('#message').val();
+
+    dispatcher.trigger('new_message', {
+      message_body: message,
+      subreddit: $('#sub').val()
     });
-
-    messages[channelName] = 0;
-
-    update_channels_list();
-
-    html = "<div id=\"" + channelName + "\" class=\"tab-pane\"></div>";
-    $('#chat').append(html);
-    $('#room-list .room-text label a[href="/r/' + channelName + '"]');
-    $('#chatbox-header').html(channelName);
-
-    $('#room-list .room-text.custom-active').removeClass('custom-active');
-    roomList = $('#room-list .room-text label a');
-    roomDivList = $('#room-list .room-text');
-    for (i = 0; i < roomList.length; i++) {
-      if (roomList[i].innerHTML == channelName) {
-        $(roomDivList[i]).addClass('custom-active');
-      }
-    }
-  };
-
-  function update_channels_list() {
-    var channelsHtml, i, indicator;
-    channelsHtml = "";
-    indicator = "<span class=\"badge pull-right\"></span>";
-    i = 0;
-    for (var room in rooms) {
-      channelsHtml = channelsHtml +
-      ("<li class=\"room-text\"><i class=\"fa fa-comments\"></i>&nbsp;<label>" +
-      "<a href=\"/r/" + room + "\">" +
-      room + "</a></label>" + indicator + "</li>");
-      i++;
-    }
-    $('#room-list').html(channelsHtml);
-    for (var room in rooms) {
-      if (messages[room] == 0) {
-        $("li:contains("+room+") span").html("");
-      } else {
-        $("li:contains("+room+") span").html(messages[room]);
-      }
-    }
-    $('#room-heading').html('Subreddits (' + i + ')');
-  };
-
+    $('#message').val('');
+  });
 });

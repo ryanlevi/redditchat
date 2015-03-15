@@ -39,6 +39,5 @@ gem 'spring',        group: :development
 gem 'debugger', group: [:development, :test]
 
 gem 'websocket-rails'
-gem 'jquery-rails'
 gem 'redditkit'
-gem 'pry'
+gem 'pry-rails'

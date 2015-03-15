@@ -10,5 +10,5 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require websocket_rails/main
 //= require chat.js.erb
+//= require websocket_rails/main
