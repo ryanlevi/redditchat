@@ -7,17 +7,19 @@ $(document).ready(function() {
 
   dispatcher.bind('new_message', function(data) {
     console.log(data);
-    var user = data.user_name;
-    if(user == 'RedditChat Server')
-      user = "<span class='label label-danger'>RedditChat Server</span> ";
-    else if(user.indexOf("@") <= -1){
-      user = "<span class='label label-primary'><a style='color:#FFFFFF' href='http://www.reddit.com/user/" + data.user_name + "' target='_blank'>" + data.user_name + "</a></span> ";
-    }
-    else{
-      user = "<span class='label label-success'>" + data.user_name + "</span> ";
-    }
-    if($('#sub').val() == data.subreddit){
-      $('#chat').append(user + data.message_body+"<br>");
+    if(data.message_body != ''){
+      var user = data.user_name;
+      if(user == 'RedditChat Server')
+        user = "<span class='label label-danger'>RedditChat Server</span> ";
+      else if(user.indexOf("@") <= -1){
+        user = "<span class='label label-primary'><a style='color:#FFFFFF' href='http://www.reddit.com/user/" + data.user_name + "' target='_blank'>" + data.user_name + "</a></span> ";
+      }
+      else{
+        user = "<span class='label label-success'>" + data.user_name + "</span> ";
+      }
+      if($('#sub').val() == data.subreddit){
+        $('#chat').append(user + data.message_body+"<br>");
+      }
     }
   });
 
