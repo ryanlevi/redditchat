@@ -13,7 +13,7 @@
     <h4>Welcome <%= session[:username] %>!</h4>
     <p>Which one of your subreddits would you like to chat with?</p>
     <% session[:subscribed_subreddits].each do |s, url| %>
-      <a href="<%= url %>"><%= s %></a>
+      <a href="<%= url %>" target="_self"><%= s %></a>
       <br>
     <% end %>
       <div class="form-inline">

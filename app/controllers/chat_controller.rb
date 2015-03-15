@@ -25,23 +25,17 @@ class ChatController < WebsocketRails::BaseController
   end
 
   def client_connected
-    puts "hello"
+    puts "#{session[:username]} connected!"
+    session[:connect] = true
   end
 
   def new_message
-    user_message :new_message, message[:message_body].dup, message[:subreddit].dup
+    user_message :new_message, message[:message_body], message[:subreddit]
   end
 
   def new_user
     connection_store[:user] = { user_name: sanitize(message[:user_name]) }
-    system_message :new_message, "#{connection_store[:user][:user_name]} connected"
-    broadcast_user_list
-  end
-
-  def change_username
-    old_user_name = connection_store[:user][:user_name]
-    connection_store[:user][:user_name] = sanitize(message[:user_name])
-    system_message :new_message, "#{old_user_name} is now known as #{connection_store[:user][:user_name]}"
+    system_message :new_message, "#{session[:username]} connected"
     broadcast_user_list
   end
 
@@ -49,6 +43,7 @@ class ChatController < WebsocketRails::BaseController
     system_msg "#{connection_store[:user][:user_name]} disconnected"
     connection_store[:user] = nil
     broadcast_user_list
+    session[:connect] = false
   end
 
   def broadcast_user_list

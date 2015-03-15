@@ -7,8 +7,12 @@ $(document).ready(function() {
 
   dispatcher.bind('new_message', function(data) {
     console.log(data);
+    var user = data.user_name;
+    if(user.indexOf("@") <= -1){
+      user = "<a href='http://www.reddit.com/user/" + data.user_name + "' target='_blank'>" + data.user_name + "</a>";
+    }
     if($('#sub').val() == data.subreddit){
-      $('#chat').append(data.user_name + ": " + data.message_body+"<br>");
+      $('#chat').append(user + ": " + data.message_body+"<br>");
     }
   });
 
@@ -22,4 +26,8 @@ $(document).ready(function() {
     });
     $('#message').val('');
   });
+
+  function leave(){
+    dispatcher.unbind('new_message');
+  }
 });

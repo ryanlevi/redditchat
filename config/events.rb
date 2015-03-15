@@ -15,5 +15,4 @@ WebsocketRails::EventMap.describe do
   subscribe :new_message,         to: ChatController, with_method: :new_message
   subscribe :new_channel_message, to: ChatController, with_method: :new_channel_message
   subscribe :client_disconnected, to: ChatController, with_method: :delete_user
-  subscribe :test, to: ChatController, with_method: :test
 end

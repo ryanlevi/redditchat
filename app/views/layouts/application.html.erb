@@ -5,7 +5,7 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <% if session[:subreddit] %>
-    <script data-turbolinks-track="true">var sub = '<%=session[:subreddit].capitalize %>'; var username = '<%=session[:username] %>'; var loaded = true;</script>
+    <script data-turbolinks-track="true">var sub = '<%=session[:subreddit].capitalize %>'; var username = '<%=session[:username] %>';</script>
   <% end %>
   <script data-turbolinks-track="true">
     var subs = [];
