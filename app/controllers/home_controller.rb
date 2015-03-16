@@ -39,12 +39,16 @@ class HomeController < ApplicationController
     if(User.find_by_name(params[:email]) and params[:email])
       session[:error] = "Account exists!"
       render 'signup'
+    elsif(params[:email].match(/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/) == nil)
+      session[:error] = "Invalid email address!"
+      render 'signup'
     else
       if(params[:password] == params[:password_kampf])
         @user = User.create(:name => params[:email],
                             :password => params[:password],
                             :reddit => false)
       end
+      UserMailer.welcome_email(@user).deliver
       session[:username] = @user.name
       session[:subscribed_subreddits] = []
       redirect_to :root
