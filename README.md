@@ -1,4 +1,5 @@
 # Reddit Chat
+A rails application that creates chatrooms for Subreddits (on Reddit.com). A project for CS176B (Networking) at UCSB.
 ### First time use
 ````
 bundle install
